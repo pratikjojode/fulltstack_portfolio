@@ -1,4 +1,3 @@
-// server.js
 const express = require("express");
 const nodemailer = require("nodemailer");
 const bodyParser = require("body-parser");
@@ -15,14 +14,17 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use(morgan("dev"));
 
-app.get("*", function (req, res) {
-  res.send(path.join(__dirname, "./client/build/index.html"));
-});
-// static files
+// Serve static files from the 'client/build' directory
 app.use(express.static(path.join(__dirname, "./client/build")));
+
+// Handles any requests that don't match the ones above
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "./client/build/index.html"));
+});
+
 // Configure Nodemailer
 const transporter = nodemailer.createTransport({
-  service: "Gmail", // You can use other email services if needed
+  service: "Gmail",
   auth: {
     user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_PASS,
